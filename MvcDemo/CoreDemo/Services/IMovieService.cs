@@ -11,5 +11,11 @@ namespace CoreDemo.Services
         Task AddAsync(Movie model);
 
         Task<IEnumerable<Movie>> GetByCinemaAsync(int cinemaId);
+
+        Task DeleteMovieByCinemaAsync(int cinemaId);
+
+        Task<Movie> GetMovieByIdAsync(int movieId);
+
+        Task DeleteByIdAsync(int movieId);
     }
 }

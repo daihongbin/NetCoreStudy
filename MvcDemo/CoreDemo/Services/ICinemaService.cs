@@ -13,5 +13,6 @@ namespace CoreDemo.Services
 
         Task AddAsync(Cinema model);
 
+        Task DeleteAsync(int cinemaId);
     }
 }

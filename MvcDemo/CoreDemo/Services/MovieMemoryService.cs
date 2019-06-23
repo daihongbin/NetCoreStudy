@@ -8,7 +8,7 @@ namespace CoreDemo.Services
 {
     public class MovieMemoryService : IMovieService
     {
-        public readonly List<Movie> _movies = new List<Movie>();
+        public List<Movie> _movies = new List<Movie>();
 
         public MovieMemoryService()
         {
@@ -48,9 +48,29 @@ namespace CoreDemo.Services
             return Task.CompletedTask;
         }
 
+        Task IMovieService.DeleteByIdAsync(int movieId)
+        {
+            var movie = _movies.FirstOrDefault(f => f.Id == movieId);
+            _movies.Remove(movie);
+            return Task.CompletedTask;
+        }
+
+        Task IMovieService.DeleteMovieByCinemaAsync(int cinemaId)
+        {
+            var movies = _movies.Where(w => w.CinemaId == cinemaId);
+            _movies = _movies.Except(movies).ToList();
+
+            return Task.CompletedTask;
+        }
+
         Task<IEnumerable<Movie>> IMovieService.GetByCinemaAsync(int cinemaId)
         {
             return Task.Run(() => _movies.Where(w => w.CinemaId == cinemaId));
+        }
+
+        Task<Movie> IMovieService.GetMovieByIdAsync(int movieId)
+        {
+            return Task.Run(() => _movies.FirstOrDefault(f => f.Id == movieId));
         }
     }
 }

@@ -14,6 +14,7 @@ namespace CoreDemo.Services
         {
             _cinemas.Add(new Cinema
             {
+                Id = 1,
                 Name = "City Cinema",
                 Location = "Road ABC, No.123",
                 Capacity = 1000
@@ -21,6 +22,7 @@ namespace CoreDemo.Services
 
             _cinemas.Add(new Cinema
             {
+                Id = 2,
                 Name = "Fly Cinema",
                 Location = "Road Hello, No.1024",
                 Capacity = 500
@@ -45,5 +47,11 @@ namespace CoreDemo.Services
             return Task.Run(() => _cinemas.AsEnumerable());
         }
 
+        Task ICinemaService.DeleteAsync(int cinemaId)
+        {
+            var cinema = _cinemas.FirstOrDefault(f => f.Id == cinemaId);
+            _cinemas.Remove(cinema);
+            return Task.CompletedTask;
+        }
     }
 }
