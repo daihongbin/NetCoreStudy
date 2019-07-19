@@ -12,15 +12,19 @@ namespace CoreDemo.Controllers
 
         private readonly IMovieService _movieService;
 
-        public HomeController(ICinemaService cinemaService,IMovieService movieService)
+        private readonly IDataProvider _dataProvider;
+
+        public HomeController(ICinemaService cinemaService,IMovieService movieService,IDataProvider dataProvider)
         {
             _cinemaService = cinemaService;
             _movieService = movieService;
+
+            _dataProvider = dataProvider;
         }
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.Title = "电影院列表";
+            ViewBag.Title = "电影院列表" + _dataProvider.Get();
 
             return View(await _cinemaService.GetllAllAsync());
         }

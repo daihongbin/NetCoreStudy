@@ -1,24 +1,46 @@
-﻿using CoreDemo.Services;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using CoreDemo.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace CoreDemo
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        public IConfiguration Configuration { get; }
+
+        public IContainer ApplicationContainer { get; private set; }
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             //注册mvc服务
             services.AddMvc();
 
             //注册service
-            services.AddSingleton<ICinemaService, CinemaMemoryService>();
-            services.AddSingleton<IMovieService, MovieMemoryService>();
+            //services.AddSingleton<ICinemaService, CinemaMemoryService>();
+            //services.AddSingleton<IMovieService, MovieMemoryService>();
+
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+
+            builder.RegisterType<DataProvider>().As<IDataProvider>();
+            builder.RegisterType<CinemaMemoryService>().As<ICinemaService>();
+            builder.RegisterType<MovieMemoryService>().As<IMovieService>();
+
+            this.ApplicationContainer = builder.Build();
+
+            return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
