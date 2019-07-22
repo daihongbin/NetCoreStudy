@@ -2,6 +2,7 @@
 using JwtBearerSample.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -19,8 +20,11 @@ namespace JwtBearerSample.Controllers
             _store = store;
         }
 
+        [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]UserDto userDto)
         {
+            var json = JsonConvert.SerializeObject(userDto);
+            Console.WriteLine("接受数据：" + json);
             var user = _store.FindUser(userDto.UserName,userDto.Password);
             if (user == null)
             {
