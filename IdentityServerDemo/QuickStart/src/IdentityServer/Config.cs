@@ -5,6 +5,8 @@
 using IdentityServer4.Models;
 using System.Collections.Generic;
 using IdentityServer4.Test;
+using IdentityServer4;
+using System.Security.Claims;
 
 namespace IdentityServer
 {
@@ -12,9 +14,10 @@ namespace IdentityServer
     {
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
-            return new IdentityResource[]
+            return new List<IdentityResource>
             {
-                new IdentityResources.OpenId()
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile()
             };
         }
 
@@ -40,6 +43,7 @@ namespace IdentityServer
                     },
                     AllowedScopes = {"api1"}
                 },
+                //密码保护api
                 new Client
                 {
                     ClientId = "ro.client",
@@ -49,6 +53,22 @@ namespace IdentityServer
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = {"api1"}
+                },
+                //mvc客户端
+                new Client
+                {
+                    ClientId = "mvc",
+                    ClientName = "MVC Client",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+
+                    RedirectUris = {"http://localhost:5002/signin-oidc"},
+                    PostLogoutRedirectUris = {"http://localhost:5002/signout/signout-callback-oidc"},
+                    
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    }
                 }
             };
         }
@@ -62,13 +82,25 @@ namespace IdentityServer
                 {
                     SubjectId = "1",
                     Username = "alice",
-                    Password = "password"
+                    Password = "password",
+
+                    Claims = new[]
+                    {
+                        new Claim("name","Alice"),
+                        new Claim("website","https://alice.com")
+                    }
                 },
                 new TestUser
                 {
                     SubjectId = "2",
                     Username = "bob",
-                    Password = "password"
+                    Password = "password",
+
+                    Claims = new[]
+                    {
+                        new Claim("name","Bob"),
+                        new Claim("website","https://bob.com")
+                    }
                 }
             };
         }
