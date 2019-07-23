@@ -3,6 +3,7 @@
 
 
 using System;
+using IdentityServer4;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +38,37 @@ namespace IdentityServer
             {
                 throw new Exception("need to configure key material");
             }
+
+            services.AddAuthentication()
+                .AddMicrosoftAccount("MicrosoftAccount",options =>  //添加微软
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                    options.ClientId = "<insert here>";
+                    options.ClientSecret = "<insert here>";
+                })
+                .AddGoogle("Google",options =>  //添加谷歌
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                    options.ClientId = "<insert here>";
+                    options.ClientSecret = "<insert here>";
+                })
+                .AddOpenIdConnect("oidc",options => //添加自己写的第三方验证
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.SignOutScheme = IdentityServerConstants.SignoutScheme;
+                    options.SaveTokens = true;
+
+                    options.Authority = "https://demo.identityserver.io/";
+                    options.ClientId = "implicit";
+
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        NameClaimType = "name",
+                        RoleClaimType = "role"
+                    };
+                });
         }
 
         public void Configure(IApplicationBuilder app)
