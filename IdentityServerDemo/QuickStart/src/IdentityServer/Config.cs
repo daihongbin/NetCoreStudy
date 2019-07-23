@@ -19,12 +19,27 @@ namespace IdentityServer
 
         public static IEnumerable<ApiResource> GetApis()
         {
-            return new ApiResource[] { };
+            return new List<ApiResource>
+            {
+                new ApiResource("api1","My API")
+            };
         }
 
         public static IEnumerable<Client> GetClients()
         {
-            return new Client[] { };
+            return new List<Client>
+            {
+                new Client
+                {
+                    ClientId = "client",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedScopes = {"api1"}
+                }
+            };
         }
     }
 }
