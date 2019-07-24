@@ -40,10 +40,15 @@ namespace ClientForMvc
             .AddCookie("Cookies")
             .AddOpenIdConnect("oidc",options => 
             {
+                options.SignInScheme = "Cookies";
+
                 options.Authority = "http://localhost:5000";
                 options.RequireHttpsMetadata = false;
 
                 options.ClientId = "mvc";
+                options.ClientSecret = "secret";
+                options.ResponseType = "code id_token";
+
                 options.SaveTokens = true;
             });
 
