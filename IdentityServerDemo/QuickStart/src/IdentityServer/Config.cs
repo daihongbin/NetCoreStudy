@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using IdentityServer4.Test;
 using IdentityServer4;
 using System.Security.Claims;
+using IdentityModel;
 
 namespace IdentityServer
 {
@@ -61,9 +62,14 @@ namespace IdentityServer
                     ClientName = "MVC Client",
                     AllowedGrantTypes = GrantTypes.Hybrid,//GrantTypes.Implicit
 
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
                     RedirectUris = {"http://localhost:5002/signin-oidc"},
                     PostLogoutRedirectUris = {"http://localhost:5002/signout/signout-callback-oidc"},
-                    
+
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
@@ -71,6 +77,26 @@ namespace IdentityServer
                         "api1"
                     },
                     AllowOfflineAccess = true
+                },
+                // JavaScript客户端
+                new Client
+                {
+                    ClientId = "js",
+                    ClientName = "JavaScript Client",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequirePkce = true,
+                    RequireClientSecret = false,
+
+                    RedirectUris = {"http://localhost:5003/callback.html"},
+                    PostLogoutRedirectUris = {"http://localhost:5003/index.html"},
+                    AllowedCorsOrigins = {"http://localhost:5003"},
+
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "api1"
+                    }
                 }
             };
         }
