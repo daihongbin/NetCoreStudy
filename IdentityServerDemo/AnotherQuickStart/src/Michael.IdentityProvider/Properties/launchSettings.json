@@ -1,0 +1,13 @@
+﻿{
+  "profiles": {
+    "Michael.IdentityProvider": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:5001",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "launchUrl": "https://localhost:5001"
+    }
+  }
+}
