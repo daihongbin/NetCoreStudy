@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MVCClient.Models;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace MVCClient.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         public IActionResult Index()
@@ -15,9 +16,10 @@ namespace MVCClient.Controllers
             return View();
         }
 
-        public IActionResult About()
+        public async Task<IActionResult> About()
         {
-            ViewData["Message"] = "Your application description page.";
+            var idToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+            ViewData["idToken"] = idToken;
 
             return View();
         }
@@ -38,6 +40,14 @@ namespace MVCClient.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public async Task Logout()
+        {
+            //清除本地Cookies
+            await HttpContext.SignOutAsync("Cookies");
+            //清除IdentityServer4
+            await HttpContext.SignOutAsync("oidc");
         }
     }
 }

@@ -52,9 +52,12 @@ namespace Michael.IdentityProvider
                 //登陆后跳转地址
                 RedirectUris = {"https://localhost:5002/signin-oidc"},
 
+                PostLogoutRedirectUris = {"https://localhost:5002/singout-callback-oidc"},
+
                 AllowedScopes = new List<string>
                 {
-                    IdentityServerConstants.StandardScopes.OpenId
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile
                 },
                 ClientSecrets =
                 {

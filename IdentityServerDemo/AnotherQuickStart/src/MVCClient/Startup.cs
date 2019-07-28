@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace MVCClient
 {
@@ -25,7 +19,9 @@ namespace MVCClient
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-
+            
+            //关闭Jwt的claim类型映射，以便允许well-know claims。
+            //
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication(options =>
@@ -43,9 +39,11 @@ namespace MVCClient
                  options.ResponseType = "code id_token";
                  options.Scope.Clear();
                  options.Scope.Add("openid");
+                 options.Scope.Add("profile");
 
                  options.SaveTokens = true;
                  options.ClientSecret = "secret";
+                 options.GetClaimsFromUserInfoEndpoint = true;
              });
         }
 
@@ -60,6 +58,10 @@ namespace MVCClient
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
