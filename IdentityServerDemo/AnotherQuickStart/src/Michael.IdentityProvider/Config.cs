@@ -1,7 +1,6 @@
 ﻿using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
-using System.Collections;
 using System.Collections.Generic;
 using System.Security.Claims;
 
@@ -19,7 +18,9 @@ namespace Michael.IdentityProvider
                 Claims = new List<Claim>
                 {
                     new Claim("given_name","Nick"),
-                    new Claim("family_name","Carter")
+                    new Claim("family_name","Carter"),
+                    new Claim("email","12345@qq.com"),
+                    new Claim("role","管理员")
                 }
             },
             new TestUser
@@ -30,7 +31,9 @@ namespace Michael.IdentityProvider
                 Claims = new List<Claim>
                 {
                     new Claim("given_name","Dave"),
-                    new Claim("family_name","Mustaine")
+                    new Claim("family_name","Mustaine"),
+                    new Claim("email","67890@qq.com"),
+                    new Claim("role","注册用户")
                 }
             }
         };
@@ -38,7 +41,9 @@ namespace Michael.IdentityProvider
         public static IEnumerable<IdentityResource> GetIdentityResources() => new List<IdentityResource>
         {
             new IdentityResources.OpenId(),
-            new IdentityResources.Profile()
+            new IdentityResources.Profile(),
+            new IdentityResources.Email(),
+            new IdentityResource("roles","角色",new List<string>{"role" })
         };
 
         public static IEnumerable<Client> GetClients() => new List<Client>
@@ -57,7 +62,9 @@ namespace Michael.IdentityProvider
                 AllowedScopes = new List<string>
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.Email,
+                    "roles"
                 },
                 ClientSecrets =
                 {
