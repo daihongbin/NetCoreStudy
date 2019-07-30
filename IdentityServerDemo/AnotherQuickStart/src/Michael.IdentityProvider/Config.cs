@@ -1,7 +1,6 @@
 ﻿using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
-using System.Collections;
 using System.Collections.Generic;
 using System.Security.Claims;
 
@@ -21,7 +20,9 @@ namespace Michael.IdentityProvider
                     new Claim("given_name","Nick"),
                     new Claim("family_name","Carter"),
                     new Claim("email","12345@qq.com"),
-                    new Claim("role","管理员")
+                    new Claim("role","管理员"),
+                    new Claim("nationality","China"),
+                    new Claim("gender","female")
                 }
             },
             new TestUser
@@ -34,7 +35,24 @@ namespace Michael.IdentityProvider
                     new Claim("given_name","Dave"),
                     new Claim("family_name","Mustaine"),
                     new Claim("email","67890@qq.com"),
-                    new Claim("role","注册用户")
+                    new Claim("role","注册用户"),
+                    new Claim("nationality","USA"),
+                    new Claim("gender","male")
+                }
+            },
+            new TestUser
+            {
+                SubjectId = "3",
+                Username = "Kevin",
+                Password = "password",
+                Claims = new List<Claim>
+                {
+                    new Claim("given_name","Kevin"),
+                    new Claim("family_name","Chang"),
+                    new Claim("email","67890111@qq.com"),
+                    new Claim("role","注册用户"),
+                    new Claim("nationality","China"),
+                    new Claim("gender","male")
                 }
             }
         };
@@ -44,7 +62,8 @@ namespace Michael.IdentityProvider
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
             new IdentityResources.Email(),
-            new IdentityResource("roles","角色",new List<string>{"role" })
+            new IdentityResource("roles","角色",new List<string>{"role" }),
+            new IdentityResource("nationality","国籍",new List<string>{"nationality" })
         };
 
         public static IEnumerable<Client> GetClients() => new List<Client>
@@ -66,7 +85,8 @@ namespace Michael.IdentityProvider
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Email,
                     "roles",
-                    "restapi"
+                    "restapi",
+                    "nationality"
                 },
                 ClientSecrets =
                 {
@@ -80,9 +100,11 @@ namespace Michael.IdentityProvider
             new ApiResource("restapi","RESTful API",new List<string>
             {
                 "role",
-                "given_name"
+                "given_name",
+                "gender",
+                "nationality"
             })
         };
-        
+
     }
 }

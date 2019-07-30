@@ -1,11 +1,9 @@
-﻿using IdentityServer4.AccessTokenValidation;
+﻿using ApiClient.Authorization;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Mvc.Cors;
-using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,6 +21,17 @@ namespace ApiClient
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CanGetValues", builder =>
+                 {
+                     builder.RequireAuthenticatedUser();
+                     builder.AddRequirements(new MustRequirement());
+                 });
+            });
+
+            services.AddSingleton<IAuthorizationHandler,MustHandler>();
+
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme) //等价于Bearer
                 .AddIdentityServerAuthentication(options =>
                 {
@@ -32,7 +41,7 @@ namespace ApiClient
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            
+
             //services.Configure<MvcOptions>(options => 
             //{
             //    options.Filters.Add(new CorsAuthorizationFilterFactory("AllowAngularDevOrigin"));

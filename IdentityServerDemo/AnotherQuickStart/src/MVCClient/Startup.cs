@@ -23,8 +23,20 @@ namespace MVCClient
         {
             services.AddMvc();
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CanViewAbout", builder =>
+                 {
+                     builder.RequireAuthenticatedUser();
+                     builder.RequireClaim("nationality", "China");
+                     builder.RequireClaim("gender", "female");
+
+                    // 可以有多个候选值
+                    //builder.RequireClaim("nationality","China","USA","UK");
+                });
+            });
+
             //关闭Jwt的claim类型映射，以便允许well-know claims。
-            //
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication(options =>
@@ -32,10 +44,10 @@ namespace MVCClient
                 options.DefaultScheme = "Cookies";
                 options.DefaultChallengeScheme = "oidc";
             })
-            .AddCookie("Cookies",options => 
-            {
-                options.AccessDeniedPath = "/Authroization/AccessDenied";
-            })
+            .AddCookie("Cookies", options =>
+             {
+                 options.AccessDeniedPath = "/Authroization/AccessDenied";
+             })
             .AddOpenIdConnect("oidc", options =>
              {
                  options.SignInScheme = "Cookies";
@@ -49,6 +61,7 @@ namespace MVCClient
                  options.Scope.Add("email");
                  options.Scope.Add("roles");
                  options.Scope.Add("restapi");
+                 options.Scope.Add("nationality");
 
                  options.SaveTokens = true;
                  options.ClientSecret = "secret";
@@ -63,7 +76,9 @@ namespace MVCClient
                  options.ClaimActions.DeleteClaim("idp");
                  options.ClaimActions.DeleteClaim("email");
 
-                 options.ClaimActions.MapUniqueJsonKey("role","role");
+                 options.ClaimActions.MapUniqueJsonKey("role", "role");
+                 options.ClaimActions.MapUniqueJsonKey("nationality", "nationality");
+                 options.ClaimActions.MapUniqueJsonKey("gender", "gender"); //需要自己映射gender，否则会一直失效 
 
                  //控制访问权限
                  options.TokenValidationParameters = new TokenValidationParameters

@@ -22,7 +22,9 @@ namespace MVCClient.Controllers
             return View();
         }
 
-        [Authorize(Roles = "管理员")]
+        //[Authorize(Policy = "CanViewAbout")]
+        //[Authorize(Roles = "管理员")]
+        [Authorize("CanViewAbout")]
         public async Task<IActionResult> About()
         {
             var idToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
@@ -41,7 +43,7 @@ namespace MVCClient.Controllers
             return View();
         }
 
-        [Authorize(Roles = "管理员")]
+
         public async Task<IActionResult> Contact()
         {
             var httpClient = new HttpClient();
@@ -65,13 +67,11 @@ namespace MVCClient.Controllers
             throw new Exception($"Error Occurred: ${res.ReasonPhrase}");
         }
 
-        [Authorize(Roles = "管理员")]
         public IActionResult Privacy()
         {
             return View();
         }
 
-        [Authorize(Roles = "管理员")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
