@@ -1,6 +1,7 @@
 ﻿using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security.Claims;
 
@@ -64,7 +65,8 @@ namespace Michael.IdentityProvider
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Email,
-                    "roles"
+                    "roles",
+                    "restapi"
                 },
                 ClientSecrets =
                 {
@@ -73,5 +75,14 @@ namespace Michael.IdentityProvider
             }
         };
 
+        public static IEnumerable<ApiResource> GetApiResources() => new List<ApiResource>
+        {
+            new ApiResource("restapi","RESTful API",new List<string>
+            {
+                "role",
+                "given_name"
+            })
+        };
+        
     }
 }

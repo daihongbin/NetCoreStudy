@@ -48,6 +48,7 @@ namespace MVCClient
                  options.Scope.Add("profile");
                  options.Scope.Add("email");
                  options.Scope.Add("roles");
+                 options.Scope.Add("restapi");
 
                  options.SaveTokens = true;
                  options.ClientSecret = "secret";
@@ -101,3 +102,4 @@ namespace MVCClient
         }
     }
 }
+

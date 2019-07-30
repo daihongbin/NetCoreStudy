@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Michael.IdentityProvider", "src\Michael.IdentityProvider\Michael.IdentityProvider.csproj", "{D602044B-4F49-4AB0-88C3-5690D255902A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Michael.IdentityProvider", "src\Michael.IdentityProvider\Michael.IdentityProvider.csproj", "{D602044B-4F49-4AB0-88C3-5690D255902A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCClient", "src\MVCClient\MVCClient.csproj", "{F458D8CA-9C64-4AA8-AAD8-568875D2C187}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCClient", "src\MVCClient\MVCClient.csproj", "{F458D8CA-9C64-4AA8-AAD8-568875D2C187}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiClient", "src\ApiClient\ApiClient.csproj", "{EC0CCA54-689B-460F-8C49-BAC4974E38DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,18 @@ Global
 		{F458D8CA-9C64-4AA8-AAD8-568875D2C187}.Release|x64.Build.0 = Release|Any CPU
 		{F458D8CA-9C64-4AA8-AAD8-568875D2C187}.Release|x86.ActiveCfg = Release|Any CPU
 		{F458D8CA-9C64-4AA8-AAD8-568875D2C187}.Release|x86.Build.0 = Release|Any CPU
+		{EC0CCA54-689B-460F-8C49-BAC4974E38DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC0CCA54-689B-460F-8C49-BAC4974E38DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC0CCA54-689B-460F-8C49-BAC4974E38DB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EC0CCA54-689B-460F-8C49-BAC4974E38DB}.Debug|x64.Build.0 = Debug|Any CPU
+		{EC0CCA54-689B-460F-8C49-BAC4974E38DB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EC0CCA54-689B-460F-8C49-BAC4974E38DB}.Debug|x86.Build.0 = Debug|Any CPU
+		{EC0CCA54-689B-460F-8C49-BAC4974E38DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC0CCA54-689B-460F-8C49-BAC4974E38DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC0CCA54-689B-460F-8C49-BAC4974E38DB}.Release|x64.ActiveCfg = Release|Any CPU
+		{EC0CCA54-689B-460F-8C49-BAC4974E38DB}.Release|x64.Build.0 = Release|Any CPU
+		{EC0CCA54-689B-460F-8C49-BAC4974E38DB}.Release|x86.ActiveCfg = Release|Any CPU
+		{EC0CCA54-689B-460F-8C49-BAC4974E38DB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
