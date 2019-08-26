@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>商品分类</title>
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-treegrid/0.2.0/css/jquery.treegrid.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/bootstrap-table@1.15.4/dist/bootstrap-table.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand">ProductApp</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark">Privacy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="Categories.html">Category1</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <div class="col-12">
+                <button class="btn btn-primary" id="addCategory" onclick="addCateogryClick()">添加</button>
+                <button class="btn btn-primary" id="modifyCategory">修改</button>
+                <button class="btn btn-primary" id="deleteCategory">删除</button>
+            </div>
+
+            <table id="table"></table>
+        </main><!--这里写主体代码-->
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2019 - ProductApp - <a href="#">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="lib/jquery/dist/jquery.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-treegrid/0.2.0/js/jquery.treegrid.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.4/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.4/dist/extensions/treegrid/bootstrap-table-treegrid.min.js"></script>
+    <script type="text/javascript">
+        var $table = $("#table");
+
+        $(function () {
+            $table.bootstrapTable({
+                url: 'http://localhost:5000/api/Category',
+                striped: true,
+                sidePagination: 'client',
+                idField: 'categoryId',
+                showColumns: true,
+                columns: [
+                    {
+                        field: "categoryId",
+                        title: "编号"
+                    },
+                    {
+                        field: 'categoryName',
+                        title: '名称'
+                    },
+                    {
+                        field: 'viewOrder',
+                        title: '显示排序',
+                        sortable: true,
+                        align: 'center'//,
+                        //formatter:'statusFormatter'
+                    },
+                    {
+                        field: 'description',
+                        title: '分类描述'
+                    },
+                    {
+                        title: "操作",
+                        button: true
+                    }
+                ],
+                treeShowField: 'categoryName',
+                parentIdField: 'parentId',
+                onPostBody: function () {
+                    var columns = $table.bootstrapTable('getOptions').columns;
+
+                    if (columns && columns[0][1].visible) {
+                        $table.treegrid({
+                            treeColumn: 1,
+                            onChange: function () {
+                                $table.bootstrapTable('resetWidth');
+                            }
+                        })
+                    }
+                }
+            });
+        });
+
+        function typeFormatter(value, row, index) {
+            if (value === 'menu') {
+                return '菜单';
+            }
+            if (value === 'button') {
+                return '按钮';
+            }
+            if (value === 'api') {
+                return '接口';
+            }
+            return '-';
+        }
+
+        function statusFormatter(value, row, index) {
+            if (value === 1) {
+                return '<span class="label label-success">正常</span>';
+            }
+
+            return '<span class="label label-default">锁定</span>';
+        }
+
+        function addCateogryClick() {
+            location.href = "AddCategory.html";
+        }
+    </script>
+</body>
+</html>
