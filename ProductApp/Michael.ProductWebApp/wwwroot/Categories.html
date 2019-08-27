@@ -73,7 +73,8 @@
                 success: function (resp) {
                     if (resp != null && resp.code === "200") {
                         console.log(resp.code + "_" + resp.msg);
-                        loadTreeTable(resp.data);
+                        loadTable(resp.data);
+                        loadTreeTable();
                     }
                 },
                 error: function (error) {
@@ -82,13 +83,14 @@
             });
         });
 
-        function loadTreeTable(categoryData) {
+        function loadTable(categoryData) {
             $table.bootstrapTable({
-                url: host + "/api/category/GetAll",
+                //url: host + "/api/category/GetAll",
                 striped: true,
                 sidePagination: 'client',
                 idField: 'categoryId',
                 showColumns: true,
+                data: categoryData,
                 columns: [
                     {
                         field: "categoryId",
@@ -114,7 +116,7 @@
                 parentIdField: 'parentId',
                 onPostBody: function () {
                     var columns = $table.bootstrapTable('getOptions').columns;
-
+                    console.log(JSON.stringify(columns));
                     if (columns && columns[0][1].visible) {
                         $table.treegrid({
                             treeColumn: 1,
@@ -125,6 +127,19 @@
                     }
                 }
             });
+        }
+
+        function loadTreeTable() {
+            var columns = $table.bootstrapTable('getOptions').columns;
+            //console.log(JSON.stringify(columns));
+            if (columns && columns[0][1].visible) {
+                $table.treegrid({
+                    treeColumn: 1,
+                    onChange: function () {
+                        $table.bootstrapTable('resetWidth');
+                    }
+                })
+            }
         }
 
         function typeFormatter(value, row, index) {
