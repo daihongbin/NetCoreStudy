@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>修改分类</title>
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css" />
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand">ProductApp</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark">Privacy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="Categories.html">Category</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <form class="form-horizontal" id="addCategoryForm">
+                <div class="form-group">
+                    <label for="firstname" class="col-sm-2 control-label">分类编号</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="categoryId" onchange="checkCategoryIDExist()" required placeholder="请输入分类编号">
+                    </div>
+                    <p class="col-sm-2" id="idPrompt"></p>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">父级分类</label>
+                    <div class="col-sm-10">
+                        <select id="parentId">
+                            <option value="0">主分类</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">分类名称</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="categoryName" required placeholder="请输入分类名称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">浏览排序</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="viewOrder" required placeholder="请输入浏览排序">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">分类描述</label>
+                    <div class="col-sm-10">
+                        <textarea id="description" class="col-12"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <input type="button" class="btn btn-primary" onclick="addCategory()" value="添加"/>
+                        <input type="button" class="btn btn-danger" value="清空" />
+                    </div>
+                </div>
+            </form>
+        </main><!--这里写主体代码-->
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2019 - Product App - <a href="#">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="lib/jquery/dist/jquery.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script type="text/javascript">
+        const host = "http://localhost:5000";
+
+        // 加载父级分类
+        fetch(host + "/api/Category/GetAllCategories", { method: "GET" })
+            .then((resp) => resp.json())
+            .then(function (data)
+            {
+                console.log(data.code + "_" + data.msg);
+                if (data.code === "200") {
+                    loadParentCategoryData(data.data)
+                }
+            })
+            .catch(function (err)
+            {
+                console.log(err);
+            });
+
+        // 加载所有父级分类
+        function loadParentCategoryData(data) {
+            var parentCategoryDDB = document.getElementById("parentId");
+
+            for (var i = 0; i < data.length; i++) {
+                var option = document.createElement("option");
+                option.value = data[i].categoryId;
+                option.innerText = data[i].categoryName;
+                parentCategoryDDB.appendChild(option);
+            }
+        }
+
+        // 添加分类
+        function addCategory() {
+            var category = {
+                categoryId: document.getElementById("categoryId").value,
+                parentId: document.getElementById("parentId").value,
+                categoryName: document.getElementById("categoryName").value,
+                viewOrder: document.getElementById("viewOrder").value,
+                description: document.getElementById("description").value
+            };
+
+            if (category.description == "" || category.description == null || category.description == undefined) {
+                alert("请填写分类描述！");
+                return;
+            }
+
+            $.ajax({
+                url: host + "/api/Category/AddCategory",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(category),
+                success: function (data) {
+                    console.log(JSON.stringify(data));
+                    if (data.code == "200") {
+                        location.href = "Categories.html";
+                    } else {
+                        alert("添加失败，错误编码：" + data.code + ",错误信息：" + data.msg);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        // 检查分类id是否存在
+        function checkCategoryIDExist() {
+            var currVal = document.getElementById("categoryId").value;
+            
+            fetch(host + "/api/Category/GetCategoryById?id=" + currVal, { method: "GET" })
+                .then((resp) => resp.json())
+                .then(function (data) {
+                    var idPrompt = document.getElementById("idPrompt");
+                    if (data.code === "200" && data.data != null) {
+                        idPrompt.innerText = "编号已重复！";
+                        idPrompt.style.color = "red";
+                    } else {
+                        idPrompt.innerText = "";
+                    }
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
+        }
+    </script>
+</body>
+</html>

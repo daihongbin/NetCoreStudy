@@ -40,7 +40,7 @@
         <main role="main" class="pb-3">
             <div class="col-12">
                 <button class="btn btn-primary" id="addCategory" onclick="addCategoryClick()">添加</button>
-                <button class="btn btn-primary" id="modifyCategory">修改</button>
+                <button class="btn btn-primary" id="modifyCategory" onclick="modifyCategoryClick()">修改</button>
                 <button class="btn btn-primary" id="deleteCategory">删除</button>
             </div>
 
@@ -93,6 +93,10 @@
                 data: categoryData,
                 columns: [
                     {
+                        title: "",
+                        radio: true
+                    },
+                    {
                         field: "categoryId",
                         title: "编号"
                     },
@@ -114,9 +118,9 @@
                 ],
                 treeShowField: 'categoryName',
                 parentIdField: 'parentId',
+                /*
                 onPostBody: function () {
                     var columns = $table.bootstrapTable('getOptions').columns;
-                    console.log(JSON.stringify(columns));
                     if (columns && columns[0][1].visible) {
                         $table.treegrid({
                             treeColumn: 1,
@@ -125,13 +129,21 @@
                             }
                         })
                     }
-                }
+                },*/
+                search: true,
+                searchOnEnterKey: true,
+                showFooter: true,
+                showRefresh: false,
+                pagination: true,
+                showSearchButton: false,
+                showSearchClearButton: false,
+                showToggle: false,
+                treeEnable: true
             });
         }
 
         function loadTreeTable() {
             var columns = $table.bootstrapTable('getOptions').columns;
-            //console.log(JSON.stringify(columns));
             if (columns && columns[0][1].visible) {
                 $table.treegrid({
                     treeColumn: 1,
@@ -163,8 +175,28 @@
             return '<span class="label label-default">锁定</span>';
         }
 
+        // 添加分类按钮
         function addCategoryClick() {
             location.href = "AddCategory.html";
+        }
+
+        // 修改分类按钮
+        function modifyCategoryClick() {
+            var obj = document.getElementsByName("btSelectItem");
+
+            let categoryId = 0, flags = false;
+            for (var i = 0; i < obj.length; i++) {
+                if (obj[i].checked == true) {
+                    flags = obj[i].checked;
+                    categoryId = obj[i].value;
+                }
+            }
+
+            if (flags) {
+                location.href = "ModifyCategory.html?categoryId=" + categoryId;
+            } else {
+                alert("未选中行！");
+            }
         }
     </script>
 </body>
