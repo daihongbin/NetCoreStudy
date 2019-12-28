@@ -1,0 +1,25 @@
+version: '3'
+
+services: 
+
+    coreweb:
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        ports: 
+            - "8080:5000"
+        networks: 
+            - aspcore-network
+        depends_on: 
+            - "postgres-server"
+    
+    postgres-server:
+        image: postgres
+        environment: 
+            POSTGRES_PASSWORD: postgres
+        networks: 
+            - aspcore-network
+
+networks: 
+    aspcore-network:
+        driver: bridge
